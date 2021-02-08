@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reactで作ったじゃんけん</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
+  <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div id="root"></div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classnames/2.2.6/index.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+
+  const Janken = () => {
+    const index = Math.floor(Math.random()*2);
+    const handArray = ['ぐー','ちょき','ぱー'];
+    const enemyHand = handArray[index];
+
+    const [win,setWin] = React.useState(0);
+    const [lose,setLose] = React.useState(0);
+    const [draw,setDraw] = React.useState(0);
+    const [result,setResult] = React.useState('');
+    const [enemy,setEnemy] = React.useState('');
+    const [number,setNumber] = React.useState(0);
+
+    const fight = (myHand) => {
+
+      if(myHand === enemyHand){
+        setDraw(draw+1);
+        setResult('引き分け');
+        setEnemy(enemyHand);
+      };
+      if(enemyHand === 'ぐー' && myHand === 'ぱー' || enemyHand === 'ちょき' && myHand === 'ぐー' || enemyHand === 'ぱー' && myHand === 'ちょき'){
+        setWin(win+1);
+        setResult('勝ち');
+        setEnemy('ぐー');
+      };
+      if(enemyHand === 'ぐー' && myHand === 'ちょき' || enemyHand === 'ちょき' && myHand === 'ぱー' ||enemyHand === 'ぱー' && myHand === 'ぐー'){
+        setLose(lose+1);
+        setResult('負け');
+        setEnemy('ぐー');
+      };
+      setNumber(number+1);
+      setEnemy(enemyHand);
+    };
+
+    return(
+      <div className="wrap">
+        <h2>じゃんけん</h2>
+        <p>{number}回目のじゃんけん</p>
+        <div>
+          <p>結果 : {result}</p>
+          <p>勝ち数 : {win}</p>
+          <p>負け数 : {lose}</p>
+          <p>引き分け数 : {draw}</p>
+        </div>
+        <div>
+          <p>相手の手は : {enemy}</p>
+        </div>
+        <button onClick={()=>fight('ぐー')}>ぐー</button>
+        <button onClick={()=>fight('ちょき')}>ちょき</button>
+        <button onClick={()=>fight('ぱー')}>ぱー</button>
+      </div>
+    );
+  };
+
+const root = document.getElementById('root');
+ReactDOM.render(<Janken />, root);
+
+  </script>
+</body>
+</html>
